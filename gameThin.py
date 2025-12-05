@@ -4,6 +4,7 @@ import math
 # board will have elements of the following format: [char, [x, y]]
 # game will have elements of the following format: [currentPlayer, turnsLeft, chars, [board1, board2,...,boardn]]
 
+# game thin is used to have a simpler, smaller version of the game code, using less python objects
 
 def createGame(playerCount, turnCount=5, stubCount=1, charString='abcdefghijklmnopqrstuvwxyz'):
     game = []
@@ -72,6 +73,7 @@ def checkValidMove(position, board):
     return False
 
 
+# calculate points for a board with a set of characters
 def calculateTotalPoints(board, characters):
     total = 0
     for char in characters:
@@ -79,6 +81,7 @@ def calculateTotalPoints(board, characters):
     return total
 
 
+# get the symbols of characters from a character list
 def getSymbolList(characters):
     charList = []
     for c in characters:
@@ -86,6 +89,7 @@ def getSymbolList(characters):
     return charList
 
 
+# get locations of possible game actions
 def getActionLocations(targetState):
     availableLocations = []
     for tile in targetState:
@@ -109,6 +113,7 @@ def getActionLocations(targetState):
     return availableLocations
 
 
+# with a set of locations and a set of characters, get a list of available actions a player can take
 def getActions(locations, characters):
     actions = []
     for l in locations:
@@ -120,12 +125,12 @@ def getActions(locations, characters):
     return actions
 
 
-
+# an algorithm to print the board in command line
 def displayBoard(board):
-    lowx=999
-    highx=-999
-    lowy=999
-    highy=-999
+    lowx=9999
+    highx=-99999
+    lowy=99999
+    highy=-99999
     printBoard = ""
     if len(board) == 0:
         print('-')

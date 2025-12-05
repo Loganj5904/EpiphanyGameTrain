@@ -45,8 +45,7 @@ def abMain():
     print(time.time() - start)
     gameThin.displayBoard(top[0])
     print(gameThin.calculateTotalPoints(top[0], ab.characters))
-    brek = True
-
 
 
 mctsMain()
+abMain()

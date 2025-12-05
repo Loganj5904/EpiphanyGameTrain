@@ -1,6 +1,7 @@
 import math
 
 
+# the methods a character tile can gain points
 class Stub():
     def __init__(self, pointValue, calculateMethod, applyTo=None):
         self.pointValue = pointValue
@@ -12,6 +13,8 @@ class Stub():
         # target will be 0 if self, and 1 if enemy
         return self.calcMethod(board, self.pointValue, self.applyToChar)
 
+
+# below are a bunch of ways a tile can gain points, to add variation to the game, this list of methods can increase
 
 # give 'val' points for each character
 def countChar(board, val, apply):
@@ -88,8 +91,7 @@ def diagShare(board, val, apply):
     return total, 0
 
 
-
-
+# available stubs and their point ranges
 # format will be: [[method, (valueRange inclusive)]]
 stubGeneration = [
     [countChar, (1, 2)],

@@ -3,11 +3,15 @@ import random
 
 availableStubs = stub.stubGeneration
 
+
+# a tile type
 class Character:
     def __init__(self, symbol):
         self.symbol = symbol
         self.stubs = []
 
+
+# this is where point methods (stubs) get generated
     def getRandomStubs(self, stubCount):
         for i in range(stubCount):
             st = random.choice(range(len(availableStubs)))
@@ -17,6 +21,8 @@ class Character:
     def getSymbol(self):
         return self.symbol
 
+
+# calculate points for this one character on a board
     def calculatePoints(self, board):
         totalPoints = [0, 0]
         for stub in self.stubs:
