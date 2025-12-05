@@ -4,6 +4,7 @@ import copy
 MAX = 100000000
 MIN = -100000000
 
+# credit to GeeksForGeeks Alpha Beta Pruning for help with algorithm
 
 class ABPrune:
     def __init__(self, turnCount, characters):
@@ -15,8 +16,9 @@ class ABPrune:
             print(depth)
         if depth == self.turnCount * 2:
             return boards
+        # if the node is a max node
         if maxPlayer:
-            best = MIN
+            best = MIN # used to track best score to compare with alpha
             possibleActions = gameThin.getActions(gameThin.getActionLocations(boards[0]), self.characters)
             bestBoards = copy.deepcopy(boards)
 
@@ -31,11 +33,12 @@ class ABPrune:
                     best = value
                     bestBoards = copy.deepcopy(newBoards)
                 alpha = max(alpha, best)
-                if beta <= alpha:
+                if beta <= alpha:   # the prune of a branch, if beta >= alpha
                     break
             return bestBoards
+        # if the node is a min node
         else:
-            best = MAX
+            best = MAX  # used to track best score to compare with beta
             possibleActions = gameThin.getActions(gameThin.getActionLocations(boards[1]), self.characters)
             bestBoards = copy.deepcopy(boards)
 
@@ -50,7 +53,6 @@ class ABPrune:
                     best = value
                     bestBoards = copy.deepcopy(newBoards)
                 beta = min(beta, best)
-
-                if beta <= alpha:
+                if beta <= alpha:   # the prune of a branch, if beta >= alpha
                     break
             return bestBoards
