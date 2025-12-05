@@ -1,0 +1,134 @@
+import math
+import random
+import gameThin
+
+class Node:
+    def __init__(self, game, parent=None, action=None):
+        self.game = game.copy()
+        self.currentBoard = game[3][game[0]]
+        self.parent = parent
+        self.action = action
+        self.children = []
+        self.visitCount = 0
+        self.wins = 0
+        self.availableActions = self.getActions()
+
+    def getActions(self, target=None, playerIndex=0):
+
+        if not target:
+            targetState = self.game
+        else:
+            targetState = target
+        return gameThin.getActions(targetState, playerIndex)
+
+        # availableActions = []
+        # availableLocations = []
+        # for tile in targetState:
+        #     primedLocations = []
+        #     if not availableLocations.__contains__([tile[1][0] + 1, tile[1][1]]):
+        #         primedLocations.append([tile[1][0] + 1, tile[1][1]])
+        #     if not availableLocations.__contains__([tile[1][0] - 1, tile[1][1]]):
+        #         primedLocations.append([tile[1][0] - 1, tile[1][1]])
+        #     if not availableLocations.__contains__([tile[1][0], tile[1][1] + 1]):
+        #         primedLocations.append([tile[1][0], tile[1][1] + 1])
+        #     if not availableLocations.__contains__([tile[1][0], tile[1][1] - 1]):
+        #         primedLocations.append([tile[1][0], tile[1][1] - 1])
+        #     removal = []
+        #     for t in targetState:
+        #         if primedLocations.__contains__(t[0]):
+        #             primedLocations.remove(t[0])
+        #     for r in removal:
+        #         primedLocations.remove(r)
+        #     availableLocations.extend(primedLocations)
+        # for l in availableLocations:
+        #     for c in self.game.getCharList():
+        #         availableActions.append((c, l))
+        # return availableActions
+
+    def isTerminal(self):
+        return self.game[1] == 0
+
+    def isExpanded(self):
+        return len(self.availableActions) == 0
+
+    # method utilized for monte carlo search, but unneeded due to game being fully expanded only once the game is done
+    # def isExpanded(self):
+    #     pass
+
+    def checkWinner(self):
+        currentWinner = -1
+        winnerScore = 0
+
+        for i in range(len(self.game[3])):
+            score = gameThin.calculateTotalPoints(self.game, i)
+            if score > winnerScore:
+                winnerScore = score
+                currentWinner = i
+        return currentWinner
+
+    def expand(self):
+        action = self.availableActions.pop()
+        gameCopy = self.game.copy()
+        newState = gameThin.place(gameCopy, action[0], action[1])
+        if len(newState[3][0]) == 5 or len(newState[3][1]) == 5:
+            brek = True
+        child = Node(newState, parent=self, action=action)
+        self.children.append(child)
+        return child
+
+    def bestChild(self, c=1.4):
+        return max(self.children, key=lambda child:
+            (child.wins / child.visitCount) + c * math.sqrt(math.log(self.visitCount) / self.visitCount))
+
+    def rollout(self):
+        state = self.game.copy()
+        # player = self.game
+
+        while True:
+            # keep an eye on this to see if it is catching the correct winner
+            winner = self.checkWinnerForState(state)    # will return who wins this state, but unsure yet which one I want
+            if state[1] == 0:
+                if winner == 0:     # im going to make this the first player from now on, may change this later
+                    return 1
+                else:
+                    return 0
+
+            actions = self.getActions(state, playerIndex=state[0])
+
+            move = random.choice(actions)
+            gameThin.place(state, move[0], move[1])
+            if len(state[3][0]) > 5 or len(state[3][1]) > 5:
+                brek = True
+            # I feel like a point of contention will be here, so keep an eye on this loop
+
+    def checkWinnerForState(self, gameState):
+        return Node(gameState).checkWinner()
+
+    def backpropagate(self, result):
+        self.visitCount += 1
+        self.wins += result
+        if self.parent:
+            self.parent.backpropagate(result)
+
+
+def mctsSearch(root, iterations=500):
+    root = Node(root, 0)
+
+    for i in range(iterations):
+        print(i)
+        node = root
+
+        # selection
+        while not node.isTerminal() and node.isExpanded():
+            node = node.bestChild()
+
+        # expansion
+        if not node.isTerminal():
+            node = node.expand()
+
+        #simulate
+        result = node.rollout()
+
+        node.backpropagate(result)
+
+    return root.bestChild(c=0).action

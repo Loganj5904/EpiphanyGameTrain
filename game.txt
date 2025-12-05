@@ -1,0 +1,49 @@
+I want a complex gridbased game where a player can place 1 (ASCII) character on a grid per turn
+each character has some point value that synergizes with other characters
+maybe the point values and synergies are randomized, and each game is unique
+Agents then need to figure out a 20 turn formation to beat their opponent
+it wouldn't just be a game of finding the highest score, because many characters might counter many other characters on the opposing side
+what formations can be found/created? how quickly will dominant strategies be developed
+
+
+game ideas:
+    rules:
+        except for the first character, each character has to be played adjacent to another character on the board
+        each player plays at the same time, and only gets a visual of their opponents board after the game state updates for both players at once
+        points are counted at the end
+        to determine fitness, take the win count, not the score disparity/score in general
+
+    character ideas:
+        variable number of base points (randomize number)
+        number of points based on certain character counts (randomize character)
+        number of points based on certain character counts of the opponent (randomize character)
+        number of points based on character count adjacent (randomize number, maybe randomize character)
+        number of points based on character count not adjacent (randomize number, maybe randomize character)
+        multiplier of adjecent characters, maybe 1-4 random directions (randomize multiplier, randomize direction, randomize character)
+        multiplier of certain other characters (randomize multiplier, randomize character)
+        number of points based on the number of copies of itself
+        number of points based on character count in same row/column (randomize character, randomize row/column, potential multiplier)
+        cancel out enemy character (randomize enemy character)
+        subtract point count of certain enemy character (randomize enemy character, randomize point count, randomize if scalable)
+        subtract point count of enemy (randomize point count)
+
+        maybe many of these conditions can apply to both sides
+            ex: multiplier of certain other characters, applies to both sides, but maybe value is higher
+
+        many characters should have more than 1 condition to add complexity
+
+        some of these characters can have count conditionals to gain additional benefits, but have to commit to a larger count of a character, which could be countered
+        randomize conditional character count
+        randomize conditional effect:
+            could be any of the above effects
+            maybe needs to be curated list
+
+
+        maybe when training, seperate into multiple groups/allow for more exploration to see more potential strategies
+
+        decision tree size:
+            c = character count
+            n = number of characters placed
+
+
+
