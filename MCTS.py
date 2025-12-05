@@ -149,8 +149,6 @@ class MCTSearch():
         for i in range(iterations):
             x = self.selection()
             y = self.expansion(x)
-            if i == 200:
-                brek = True
             if y:
                 result = self.rollout(y)
                 self.backpropagation(y, result)
