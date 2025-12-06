@@ -3,7 +3,9 @@ import random
 import gameThin
 
 
-class Node():
+# Credit to Single-Player Monte-Carlo Tree Search, Maarten P.D. Schadd et al. for format and help with code
+
+class Node():   # a node on the mcts tree
     def __init__(self, state):
         self.state = state
         self.wins = 0
@@ -33,6 +35,7 @@ class MCTSearch():
 
         self.scoreCheck = 7
 
+    # selects next child to be expanded
     def selection(self):
         selectedChild = self.root
         hasChild = False
@@ -45,6 +48,7 @@ class MCTSearch():
                 hasChild = False
         return selectedChild
 
+    # selectes child on specific node
     def selectChild(self, node):
         if len(node.children) == 0:
             return node
@@ -62,6 +66,7 @@ class MCTSearch():
                 selectedChild = child
         return selectedChild
 
+    # expands a leaf node for each possible action
     def expansion(self, leaf):
         if self.isTerminal(leaf):
             return False
@@ -69,7 +74,7 @@ class MCTSearch():
             return leaf
         else:
             if len(leaf.children) == 0:
-                children = self.evalChildren(leaf)
+                children = self.addChildren(leaf)
                 for child in children:
                     if child.state == leaf.state:
                         continue
@@ -78,12 +83,14 @@ class MCTSearch():
 
         return child
 
+    # checks if the game is over
     def isTerminal(self, node):
         if len(node.state) == self.turnCount:
             return True
         return False
 
-    def evalChildren(self, node):
+    # adds new children to a node
+    def addChildren(self, node):
         actionOptions = gameThin.getActions(gameThin.getActionLocations(node.state), self.characters)
         children = []
 
@@ -94,9 +101,11 @@ class MCTSearch():
             children.append(childNode)
         return children
 
+    # selects a random child node
     def selectChildNode(self, node):
         return node.children[random.randint(0, len(node.children) - 1)]
 
+    # play a game out with random moves to determine a score
     def rollout(self, node):
         currentState = node.state.copy()
         while not len(currentState) == self.turnCount:
@@ -107,6 +116,7 @@ class MCTSearch():
             return 1
         return -1
 
+    # backpropagate and update each node on a rolled out path and add a win to each if necessary
     def backpropagation(self, node, result):
         node.wins += result
         node.ressq += result **2
@@ -120,7 +130,7 @@ class MCTSearch():
             current.visits += 1
             self.evalUTC(current)
 
-
+    # evaluate the UTC function of a node, and store it in the nodes weights
     def evalUTC(self, node):
         c = 1.4
         w = node.wins
@@ -138,11 +148,13 @@ class MCTSearch():
         return node.sputc
 
 
+    # determine if a node has a parent
     def hasParent(self, node):
         if node.parent is None:
             return False
         return True
 
+    # the run of the algorithm,
     def run(self, iterations=500):
         x = None
         y = None
