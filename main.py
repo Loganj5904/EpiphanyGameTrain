@@ -47,5 +47,6 @@ def abMain():
     print(gameThin.calculateTotalPoints(top[0], ab.characters))
 
 
-mctsMain()
-# abMain()
+mctsMain()     # used to run Monte Carlo tree search
+# abMain()     # used to run AB pruning minimax search
+# main()       # used to play the game normally with 2 players
